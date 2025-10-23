@@ -5,7 +5,7 @@ namespace domain.account;
 
 public class Account : AggregateRoot, IAccount
 {
-    public Guid Id { get; private set; }
+    public Guid Id { get; set; }
     public string Email {get; private set;}
     public string UserName {get; private set;}
     public string Password {get; private set;}
@@ -18,7 +18,7 @@ public class Account : AggregateRoot, IAccount
         Password = password;
         CreatedAt = DateTime.UtcNow;
 
-        AddDomainEvent(new AccountCreatedEvent(Id, Email, CreatedAt));
+        AddDomainEvent(new AccountCreatedEvent(Email, UserName, CreatedAt));
     }
     
     public static Account Create(string email, string userName, string password)
