@@ -15,7 +15,7 @@ public sealed class AccountRepository : IAccountRepository
     
     public async Task<Account?> GetByEmailAsync(string email, CancellationToken cancellationToken = default)
     {
-        var account = await _context.Accounts.FirstAsync(a => a.Email == email);
+        var account = await _context.Accounts.FirstAsync(a => a.Email == email, cancellationToken: cancellationToken);
 
         // This call is allowed because of InternalsVisibleTo, in assemblyinfo
         return new Account(
