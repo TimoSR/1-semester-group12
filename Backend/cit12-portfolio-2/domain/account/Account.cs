@@ -7,39 +7,39 @@ public class Account : AggregateRoot, IAccount
 {
     public Guid Id { get; private set; }
     public string Email {get; private set;}
-    public string UserName {get; private set;}
+    public string Username {get; private set;}
     public string Password {get; private set;}
     public DateTime CreatedAt { get; private set; }
 
-    internal Account(Guid id, string email, string userName, string password, DateTime createdAt)
+    internal Account(Guid id, string email, string username, string password, DateTime createdAt)
     {
         Id = id;
         Email = email;
-        UserName = userName;
+        Username = username;
         Password = password;
         CreatedAt = createdAt;
     }
     
-    private Account(string email, string userName, string password)
+    private Account(string email, string username, string password)
     {
         Email = email.Trim();
-        UserName = userName.Trim();
+        Username = username.Trim();
         Password = password;
         CreatedAt = DateTime.UtcNow;
 
-        AddDomainEvent(new AccountCreatedEvent(Email, UserName, CreatedAt));
+        AddDomainEvent(new AccountCreatedEvent(Email, Username, CreatedAt));
     }
     
-    public static Account Create(string email, string userName, string password)
+    public static Account Create(string email, string username, string password)
     {
         if (string.IsNullOrWhiteSpace(email))
             throw new InvalidEmailException();
-        if (string.IsNullOrWhiteSpace(userName))
+        if (string.IsNullOrWhiteSpace(username))
             throw new InvalidUserNameException();
         if (string.IsNullOrWhiteSpace(password))
             throw new InvalidPasswordException();
 
-        var account = new Account(email, userName, password);
+        var account = new Account(email, username, password);
         return account;
     }
     

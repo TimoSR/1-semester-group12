@@ -21,7 +21,7 @@ public sealed class AccountRepository : IAccountRepository
         return new Account(
             account.Id,
             account.Email,
-            account.UserName,
+            account.Username,
             account.Password,
             account.CreatedAt);
     }
@@ -34,5 +34,17 @@ public sealed class AccountRepository : IAccountRepository
     public Task<bool> ExistsAsync(Guid id, CancellationToken cancellationToken = default)
     {
         throw new NotImplementedException();
+    }
+
+    public async Task AddAsync(Account account, CancellationToken cancellationToken = default)
+    {
+        await _dbContext.Accounts.AddAsync(account, cancellationToken);
+    }
+    
+    public async Task<Account?> GetByIdAsync(Guid id, CancellationToken cancellationToken)
+    {
+        return await _dbContext.Accounts
+            .AsNoTracking() // Optional: skip EF change tracking for read-only query
+            .FirstOrDefaultAsync(a => a.Id == id, cancellationToken);
     }
 }

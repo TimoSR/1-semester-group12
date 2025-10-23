@@ -1,9 +1,10 @@
+using api.controllers;
+using application.accountService;
 using Microsoft.EntityFrameworkCore;
 using domain.account.interfaces;
 using infrastructure;
 using infrastructure.repositories;
 using program;
-using service_patterns;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -23,11 +24,16 @@ builder.Services.AddDbContext<MovieDbContext>(options =>
 // This means you get one instance per HTTP request.
 builder.Services.AddScoped<IAccountRepository, AccountRepository>();
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+builder.Services.AddScoped<IAccountService, AccountService>();
 
 // 4. Register you applications services
 
 // 5. Register your controllers
-builder.Services.AddControllers();
+
+builder.Services
+    .AddControllers()
+    .AddApplicationPart(typeof(AccountsController).Assembly)
+    .AddControllersAsServices();
 
 // Application addons
 builder.Services.AddOpenApi();
@@ -35,6 +41,9 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
+
+app.UseRouting();
+
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -45,6 +54,8 @@ if (app.Environment.IsDevelopment())
 }
 
 // Final configuration
+
+
 
 app.UseHttpsRedirection();
 app.MapControllers();

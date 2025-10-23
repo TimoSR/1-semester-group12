@@ -6,7 +6,7 @@ public interface IAccount : IAggregateRoot
 {
     Guid Id { get; }
     string Email { get; }
-    string UserName { get; }
+    string Username { get; }
     string Password { get; }
     DateTime CreatedAt { get; }
     

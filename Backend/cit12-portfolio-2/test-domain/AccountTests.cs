@@ -21,7 +21,7 @@ namespace test_domain
             // Assert
             Assert.NotNull(account);
             Assert.Equal(email, account.Email);
-            Assert.Equal(userName, account.UserName);
+            Assert.Equal(userName, account.Username);
             Assert.Equal(password, account.Password);
             Assert.True(account.CreatedAt <= DateTime.UtcNow);
             Assert.Single(account.DomainEvents);

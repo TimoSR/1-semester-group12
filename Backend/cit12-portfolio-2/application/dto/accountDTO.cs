@@ -2,7 +2,7 @@
 
 namespace application.orderService.dto;
 
-public class orderDTO : DTO
+public class accountDTO : DTO
 {
     
 }
