@@ -1,9 +1,7 @@
 ﻿using System.Net.Mime;
-using application;
 using application.accountService;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 
 namespace api.controllers;
 
