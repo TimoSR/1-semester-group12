@@ -10,8 +10,15 @@ public class Account : AggregateRoot, IAccount
     public string UserName {get; private set;}
     public string Password {get; private set;}
     public DateTime CreatedAt { get; private set; }
-    
-    private Account() { }
+
+    protected internal Account(Guid id, string email, string userName, string password, DateTime createdAt)
+    {
+        Id = id;
+        Email = email;
+        UserName = userName;
+        Password = password;
+        CreatedAt = createdAt;
+    }
     
     private Account(string email, string userName, string password)
     {
@@ -34,18 +41,6 @@ public class Account : AggregateRoot, IAccount
 
         var account = new Account(email, userName, password);
         return account;
-    }
-    
-    protected internal static Account Rehydrate(Guid id, string email, string userName, string password, DateTime createdAt)
-    {
-        return new Account
-        {
-            Id = id,
-            Email = email,
-            UserName = userName,
-            Password = password,
-            CreatedAt = createdAt
-        };
     }
     
     public void ChangeEmail(string newEmail)

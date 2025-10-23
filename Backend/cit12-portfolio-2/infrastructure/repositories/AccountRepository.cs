@@ -1,5 +1,6 @@
 using domain.account;
 using domain.account.interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace infrastructure.repositories;
 
@@ -12,9 +13,17 @@ public sealed class AccountRepository : IAccountRepository
         _context = context;
     }
     
-    public Task<Account?> GetByEmailAsync(string email, CancellationToken cancellationToken = default)
+    public async Task<Account?> GetByEmailAsync(string email, CancellationToken cancellationToken = default)
     {
-        throw new NotImplementedException();
+        var account = await _context.Accounts.FirstAsync(a => a.Email == email);
+
+        // This call is allowed because of InternalsVisibleTo, in assemblyinfo
+        return new Account(
+            account.Id,
+            account.Email,
+            account.UserName,
+            account.Password,
+            account.CreatedAt);
     }
 
     public Task<Account?> GetByUserNameAsync(string userName, CancellationToken cancellationToken = default)

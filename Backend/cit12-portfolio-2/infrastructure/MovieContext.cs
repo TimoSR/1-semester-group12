@@ -5,7 +5,7 @@ namespace infrastructure;
 
 public class MovieContext (DbContextOptions<MovieContext> options) : DbContext(options)
 {
-    public DbSet<Account> Products => Set<Account>();
+    public DbSet<Account> Accounts => Set<Account>();
     
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
