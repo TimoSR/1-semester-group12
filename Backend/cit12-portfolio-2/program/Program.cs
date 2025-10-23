@@ -9,12 +9,25 @@ using program;
 var builder = WebApplication.CreateBuilder(args);
 
 DotNetEnv.Env.Load(".env.local");
+
 builder.Configuration.AddEnvironmentVariables();
 builder.Services.Configure<AppSettings>(builder.Configuration.GetSection("APP"));
 builder.Services.Configure<DatabaseSettings>(builder.Configuration.GetSection("DATABASE"));
 
+/*// 🔍 Print AppSettings
+var appSettings = builder.Configuration.GetSection("APP").Get<AppSettings>();
+Console.WriteLine("=== App Settings ===");
+Console.WriteLine($"Name: {appSettings?.Name}");
+Console.WriteLine($"Version: {appSettings?.Version}");
+
+// 🔍 Print DatabaseSettings
+var dbSettings = builder.Configuration.GetSection("DATABASE").Get<DatabaseSettings>();
+Console.WriteLine("=== Database Settings ===");
+Console.WriteLine($"ConnectionString: {dbSettings?.ConnectionString}");
+Console.WriteLine($"Host: {dbSettings?.Host}");*/
+
 // 1. Get the connection string
-var connectionString = builder.Configuration["DATABASE__CONNECTION_STRING"];
+var connectionString = builder.Configuration["DATABASE_CONNECTION_STRING"];
 
 // 2. Register DbContext
 builder.Services.AddDbContext<MovieDbContext>(options =>
@@ -42,6 +55,29 @@ builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
+// 3. Test database connection at startup
+using (var scope = app.Services.CreateScope())
+{
+    var dbContext = scope.ServiceProvider.GetRequiredService<MovieDbContext>();
+
+    try
+    {
+        var canConnect = await dbContext.Database.CanConnectAsync();
+
+        if (!canConnect)
+        {
+            throw new Exception("Failed to connect to the database. Check your connection string, database availability or VPN!.");
+        }
+
+        app.Logger.LogInformation("✅ Successfully connected to the database.");
+    }
+    catch (Exception ex)
+    {
+        app.Logger.LogCritical(ex, "❌ Could not connect to the database on startup.");
+        throw; // Let the app crash early
+    }
+}
+
 app.UseRouting();
 
 
@@ -55,10 +91,9 @@ if (app.Environment.IsDevelopment())
 
 // Final configuration
 
-
-
 app.UseHttpsRedirection();
 app.MapControllers();
 app.UseSwagger();
 app.UseCors();
 app.Run();
+
