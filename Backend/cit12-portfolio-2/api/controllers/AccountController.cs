@@ -29,29 +29,33 @@ public class AccountsController(IAccountService accountService) : ControllerBase
 
             // Prefer CreatedAtAction or CreatedAtRoute if GetById is available
             return CreatedAtAction(
-                nameof(GetById), // You'll need a GetById endpoint for this to resolve properly
+                nameof(GetById),
                 new { id = dto.Id },
                 dto
             );
         }
 
-        var problemDetails = new ProblemDetails
+        return result.Error.Code switch
         {
-            Type = "https://httpstatuses.com/500",
-            Title = "Unexpected Error",
-            Status = StatusCodes.Status500InternalServerError,
-            Detail = result.Error.Description,
-            Instance = HttpContext.TraceIdentifier
+            "Account.DuplicateEmail" or "Account.DuplicateUsername" =>
+                Conflict(new ProblemDetails
+                {
+                    Type = "https://httpstatuses.com/409",
+                    Title = "Conflict",
+                    Status = StatusCodes.Status409Conflict,
+                    Detail = result.Error.Description,
+                    Instance = HttpContext.TraceIdentifier
+                }),
+
+            _ => StatusCode(StatusCodes.Status500InternalServerError, new ProblemDetails
+            {
+                Type = "https://httpstatuses.com/500",
+                Title = "Internal Server Error",
+                Status = StatusCodes.Status500InternalServerError,
+                Detail = result.Error.Description,
+                Instance = HttpContext.TraceIdentifier
+            })
         };
-
-        if (result.Error.Code is "Account.DuplicateEmail" or "Account.DuplicateUsername")
-        {
-            problemDetails.Type = "https://httpstatuses.com/409";
-            problemDetails.Title = "Conflict";
-            problemDetails.Status = StatusCodes.Status409Conflict;
-        }
-
-        return StatusCode(problemDetails.Status.Value, problemDetails);
     }
     
     [HttpGet("{id:guid}")]
