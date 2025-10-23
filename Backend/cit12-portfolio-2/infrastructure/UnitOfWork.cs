@@ -1,5 +1,4 @@
 using domain.account.interfaces;
-using infrastructure.repositories;
 using Microsoft.EntityFrameworkCore.Storage;
 using service_patterns;
 
@@ -12,10 +11,12 @@ public class UnitOfWork : IUnitOfWork
     private readonly MovieDbContext _dbContext;
     private IDbContextTransaction? _currentTransaction;
 
-    public UnitOfWork(MovieDbContext dbContext)
+    public UnitOfWork(
+        MovieDbContext dbContext,
+        IAccountRepository accountRepository)
     {
         _dbContext = dbContext;
-        AccountRepository = new AccountRepository(_dbContext);
+        AccountRepository = accountRepository;
     }
 
     public async Task BeginTransactionAsync(CancellationToken cancellationToken = default)
