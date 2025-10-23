@@ -1,4 +1,4 @@
-﻿using domain.account;
+using domain.account;
 using Microsoft.EntityFrameworkCore;
 
 namespace infrastructure;
