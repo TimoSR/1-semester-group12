@@ -14,35 +14,14 @@ public class MovieDbContext (DbContextOptions<MovieDbContext> options) : DbConte
         
         modelBuilder.Entity<Account>(entity =>
         {
-            // Primary Key
+            entity.ToTable("account", "profile");
+
             entity.HasKey(e => e.Id);
-
-            // Table name (optional, defaults to DbSet name)
-            entity.ToTable("Accounts");
-
-            // Email
-            entity.Property(e => e.Email)
-                .IsRequired()
-                .HasMaxLength(255);
-
-            // Username
-            entity.Property(e => e.Username)
-                .IsRequired()
-                .HasMaxLength(100);
-
-            // Password
-            entity.Property(e => e.Password)
-                .IsRequired()
-                .HasMaxLength(100); // or more if hashed
-
-            // CreatedAt
-            entity.Property(e => e.CreatedAt)
-                .IsRequired()
-                .HasDefaultValueSql("NOW()"); // PostgreSQL-specific
-
-            // Optional: Indexes for performance
-            entity.HasIndex(e => e.Email).IsUnique();
-            entity.HasIndex(e => e.Username).IsUnique();
+            entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.Email).HasColumnName("email");
+            entity.Property(e => e.Username).HasColumnName("username");
+            entity.Property(e => e.Password).HasColumnName("password_hash");
+            entity.Property(e => e.CreatedAt).HasColumnName("created_at");
         });
     }
 }
