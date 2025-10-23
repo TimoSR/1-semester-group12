@@ -5,11 +5,13 @@ namespace domain.account;
 
 public class Account : AggregateRoot, IAccount
 {
-    public Guid Id { get; set; }
+    public Guid Id { get; private set; }
     public string Email {get; private set;}
     public string UserName {get; private set;}
     public string Password {get; private set;}
     public DateTime CreatedAt { get; private set; }
+    
+    private Account() { }
     
     private Account(string email, string userName, string password)
     {
@@ -32,6 +34,18 @@ public class Account : AggregateRoot, IAccount
 
         var account = new Account(email, userName, password);
         return account;
+    }
+    
+    protected internal static Account Rehydrate(Guid id, string email, string userName, string password, DateTime createdAt)
+    {
+        return new Account
+        {
+            Id = id,
+            Email = email,
+            UserName = userName,
+            Password = password,
+            CreatedAt = createdAt
+        };
     }
     
     public void ChangeEmail(string newEmail)
