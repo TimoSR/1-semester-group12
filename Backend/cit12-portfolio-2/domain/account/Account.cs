@@ -11,7 +11,7 @@ public class Account : AggregateRoot, IAccount
     public string Password {get; private set;}
     public DateTime CreatedAt { get; private set; }
 
-    protected internal Account(Guid id, string email, string userName, string password, DateTime createdAt)
+    internal Account(Guid id, string email, string userName, string password, DateTime createdAt)
     {
         Id = id;
         Email = email;

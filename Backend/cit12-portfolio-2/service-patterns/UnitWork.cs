@@ -1,8 +1,7 @@
 ﻿namespace service_patterns;
 
-public interface IUnitOfWork : IAsyncDisposable
+public interface IUnitOfWork : IDisposable, IAsyncDisposable
 {
-    //IAccountRepository Accounts { get; }
     Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
     Task BeginTransactionAsync(CancellationToken cancellationToken = default);
     Task CommitTransactionAsync(CancellationToken cancellationToken = default);

@@ -6,16 +6,16 @@ namespace infrastructure.repositories;
 
 public sealed class AccountRepository : IAccountRepository
 {
-    private readonly MovieContext _context;
+    private readonly MovieDbContext _dbContext;
 
-    public AccountRepository(MovieContext context)
+    public AccountRepository(MovieDbContext dbContext)
     {
-        _context = context;
+        _dbContext = dbContext;
     }
     
     public async Task<Account?> GetByEmailAsync(string email, CancellationToken cancellationToken = default)
     {
-        var account = await _context.Accounts.FirstAsync(a => a.Email == email, cancellationToken: cancellationToken);
+        var account = await _dbContext.Accounts.FirstAsync(a => a.Email == email, cancellationToken: cancellationToken);
 
         // This call is allowed because of InternalsVisibleTo, in assemblyinfo
         return new Account(

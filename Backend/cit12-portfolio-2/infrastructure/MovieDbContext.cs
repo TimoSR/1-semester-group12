@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace infrastructure;
 
-public class MovieContext (DbContextOptions<MovieContext> options) : DbContext(options)
+public class MovieDbContext (DbContextOptions<MovieDbContext> options) : DbContext(options)
 {
     public DbSet<Account> Accounts => Set<Account>();
     
