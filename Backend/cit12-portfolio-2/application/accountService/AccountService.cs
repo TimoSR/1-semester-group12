@@ -10,13 +10,11 @@ public class AccountService(IUnitOfWork unitOfWork, ILogger<AccountService> logg
     public async Task<Result<Account>> CreateAccountAsync(CreateAccountCommand command, CancellationToken cancellationToken)
     {
         // 1. Check for existing account with the same username or email concurrently
-        var existingUsernameTask = unitOfWork.AccountRepository.GetByUserNameAsync(command.Username, cancellationToken);
-        var existingEmailTask = unitOfWork.AccountRepository.GetByEmailAsync(command.Email, cancellationToken);
+        var existingUsername = await unitOfWork.AccountRepository
+            .GetByUserNameAsync(command.Username, cancellationToken);
 
-        await Task.WhenAll(existingUsernameTask, existingEmailTask);
-
-        var existingUsername = await existingUsernameTask;
-        var existingEmail = await existingEmailTask;
+        var existingEmail = await unitOfWork.AccountRepository
+            .GetByEmailAsync(command.Email, cancellationToken);
 
         if (existingUsername is not null)
         {
@@ -66,7 +64,7 @@ public class AccountService(IUnitOfWork unitOfWork, ILogger<AccountService> logg
         {
             var account = await unitOfWork.AccountRepository.GetByIdAsync(id, cancellationToken);
 
-            return Result<Account>.Success(account);
+            return Result<Account>.Success(account!);
         }
         catch (Exception ex)
         {

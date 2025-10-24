@@ -15,20 +15,22 @@ public sealed class AccountRepository : IAccountRepository
     
     public async Task<Account?> GetByEmailAsync(string email, CancellationToken cancellationToken = default)
     {
-        var account = await _dbContext.Accounts.FirstAsync(a => a.Email == email, cancellationToken: cancellationToken);
+        var account = await _dbContext.Accounts
+            .AsNoTracking()
+            .SingleOrDefaultAsync(a => a.Email == email, cancellationToken);
 
         // This call is allowed because of InternalsVisibleTo, in assemblyinfo
-        return new Account(
-            account.Id,
-            account.Email,
-            account.Username,
-            account.Password,
-            account.CreatedAt);
+        return account;
     }
 
-    public Task<Account?> GetByUserNameAsync(string userName, CancellationToken cancellationToken = default)
+    public async Task<Account?> GetByUserNameAsync(string username, CancellationToken cancellationToken = default)
     {
-        throw new NotImplementedException();
+        var account = await _dbContext.Accounts
+            .AsNoTracking()
+            .SingleOrDefaultAsync(a => a.Username == username, cancellationToken);
+
+        // This call is allowed because of InternalsVisibleTo, in assemblyinfo
+        return account;
     }
 
     public Task<bool> ExistsAsync(Guid id, CancellationToken cancellationToken = default)
