@@ -45,7 +45,7 @@ builder.Services.AddScoped<IAccountService, AccountService>();
 
 builder.Services
     .AddControllers()
-    .AddApplicationPart(typeof(AccountsController).Assembly)
+    .AddApplicationPart(typeof(AccountController).Assembly)
     .AddControllersAsServices();
 
 // Application addons
