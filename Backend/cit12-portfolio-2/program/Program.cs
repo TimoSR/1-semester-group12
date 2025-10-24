@@ -33,7 +33,6 @@ var connectionString = builder.Configuration["DATABASE_CONNECTION_STRING"];
 builder.Services.AddDbContext<MovieDbContext>(options =>
     options.UseNpgsql(connectionString));
 
-
 // 3. Register your repositories and Unit of Work as Scoped
 // This means you get one instance per HTTP request.
 builder.Services.AddScoped<IAccountRepository, AccountRepository>();
@@ -46,13 +45,19 @@ builder.Services.AddScoped<IAccountService, AccountService>();
 
 builder.Services
     .AddControllers()
-    .AddApplicationPart(typeof(AccountController).Assembly)
+    .AddApplicationPart(typeof(AccountsController).Assembly)
     .AddControllersAsServices();
 
 // Application addons
 builder.Services.AddOpenApi();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+builder.Services.AddRouting(options =>
+{
+    options.LowercaseUrls = true;
+    options.LowercaseQueryStrings = false;
+});
 
 var app = builder.Build();
 
