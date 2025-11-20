@@ -1,4 +1,3 @@
-// src/App.tsx
 import React, { useEffect, useState } from 'react';
 import './index.css';
 import { searchPersons } from './api/tmdb';
