@@ -1,4 +1,3 @@
-// src/components/KnownForList.tsx
 import React from 'react';
 import { type TmdbKnownForMedia } from '../types/tmdb';
 import { buildProfileImageUrl } from '../api/tmdb';

@@ -1,4 +1,3 @@
-// src/components/PersonCard.tsx
 import React from 'react';
 import type { TmdbPerson } from '../types/tmdb';
 import { buildProfileImageUrl } from '../api/tmdb';

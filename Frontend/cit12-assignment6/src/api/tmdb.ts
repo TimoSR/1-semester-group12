@@ -1,6 +1,5 @@
 import type { TmdbPerson, TmdbSearchPersonResponse, TmdbImageProfile, TmdbPersonImagesResponse } from "../types/tmdb";
 
-
 const TMDB_API_KEY = import.meta.env.VITE_TMDB_API_KEY as string | undefined;
 
 console.log(import.meta.env.VITE_SOME_KEY)
