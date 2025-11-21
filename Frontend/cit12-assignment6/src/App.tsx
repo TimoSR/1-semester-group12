@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import './index.css';
 import { searchPersons } from './api/tmdb';
 import { PersonCard } from './components/PersonCard';
 import type { TmdbPerson } from './types/tmdb';
 
-const QUERY = 'spielberg'; // Task 3: hardcoded query string
+const QUERY = 'spielberg';
 
 export const App: React.FC = () => {
   const [persons, setPersons] = useState<TmdbPerson[]>([]);
@@ -42,10 +42,7 @@ export const App: React.FC = () => {
     }
 
     loadPersons();
-
-    return () => {
-      cancelled = true;
-    };
+    return () => { cancelled = true; };
   }, []);
 
   const hasPersons = persons.length > 0;
@@ -71,6 +68,41 @@ export const App: React.FC = () => {
       setSelectedIndex(index);
     }
   };
+
+  // ------------------------------------------------------------
+  // ADVANCED PAGINATION LOGIC → 1 ... 4 5 6 7 8 ... 20
+  // ------------------------------------------------------------
+
+  const pagination = useMemo(() => {
+    const total = persons.length;
+    const current = selectedIndex + 1;
+
+    if (total <= 10) {
+      return [...Array(total)].map((_, i) => i + 1);
+    }
+
+    const pages: (number | 'ellipsis')[] = [];
+    const add = (n: number | 'ellipsis') => pages.push(n);
+
+    add(1);
+
+    if (current > 4) add('ellipsis');
+
+    const start = Math.max(2, current - 2);
+    const end = Math.min(total - 1, current + 2);
+
+    for (let p = start; p <= end; p++) {
+      add(p);
+    }
+
+    if (current < total - 3) add('ellipsis');
+
+    add(total);
+
+    return pages;
+  }, [persons.length, selectedIndex]);
+
+  // ------------------------------------------------------------
 
   return (
     <div className="app-root">
@@ -103,19 +135,32 @@ export const App: React.FC = () => {
               </button>
             </div>
 
+            {/* ----------------- COMPRESSED PAGINATION ----------------- */}
             <div className="nav-indices">
-              {persons.map((person, index) => (
-                <button
-                  key={person.id}
-                  className={
-                    index === selectedIndex ? 'index-button active' : 'index-button'
-                  }
-                  onClick={() => handleJumpTo(index)}
-                >
-                  {index + 1}
-                </button>
-              ))}
+              {pagination.map((entry, i) => {
+                if (entry === 'ellipsis') {
+                  return (
+                    <span key={`ellipsis-${i}`} className="ellipsis">
+                      ...
+                    </span>
+                  );
+                }
+
+                const index = entry - 1;
+                const isActive = index === selectedIndex;
+
+                return (
+                  <button
+                    key={`page-${entry}`}
+                    className={isActive ? 'index-button active' : 'index-button'}
+                    onClick={() => handleJumpTo(index)}
+                  >
+                    {entry}
+                  </button>
+                );
+              })}
             </div>
+            {/* ---------------------------------------------------------- */}
           </section>
 
           <main>
