@@ -1,3 +1,5 @@
+// CIT12; Timothy Stoltzner Rasmussen, Christoffer Bouet, Mana Karki
+
 import React, { useEffect, useState, useMemo } from 'react';
 import './index.css';
 import { searchPersons } from './api/tmdb';
