@@ -1,3 +1,10 @@
+# Running the Project
+
+npm install -g pnpm@latest-10
+pnpm install
+pnpm build
+pnpm preview
+
 # React + TypeScript + Vite
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
